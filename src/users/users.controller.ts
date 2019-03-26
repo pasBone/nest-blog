@@ -5,7 +5,7 @@ import { UserServices } from './users.service';
 export class UserController {
     constructor(private readonly userServices: UserServices) { }
 
-    @Get('create')
+    @Post()
     async create(): Promise<string> {
         return this.userServices.create();
         // return 'this is new Users post'
