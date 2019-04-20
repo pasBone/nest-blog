@@ -20,15 +20,13 @@ export class Users {
     id: string
 
     @Column({
-        length: 20,
+        length: 40,
         unique: true,
     })
     username: string
 
-    @Column({
-        length: 32
-    })
-    password: string
+    @Column()
+    age: number
 
     @Column()
     ip: string
@@ -56,7 +54,4 @@ export class Users {
         default: UserRole.EDITOR
     })
     role: UserRole
-
-    @Column()
-    age: number
 }

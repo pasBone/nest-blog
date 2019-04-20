@@ -1,0 +1,6 @@
+###query user
+GET http://192.168.17.214:8081/users
+
+###create user
+POST  http://192.168.17.214:8081/users
+Content-Type: application/json

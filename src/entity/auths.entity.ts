@@ -8,11 +8,20 @@ export class UsersAuth {
     })
     id: string
 
-    // @Column()
-    // create_time: number
+    @Column({
+        length: 32
+    })
+    password: string
 
-    // @Column()
-    // update_time: number
+    @Column({
+        type: 'bigint',
+    })
+    create_time: number
+
+    @Column({
+        type: 'bigint',
+    })
+    update_time: number
 
     @OneToOne(type => Users)
     @JoinColumn()
