@@ -25,21 +25,19 @@ export class Users {
     })
     username: string
 
-    @Column()
+    @Column({
+        default: 0
+    })
     age: number
 
     @Column()
     ip: string
 
-    @Column({
-        type: 'bigint',
-    })
-    create_time: number
+    @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP" })
+    create_time: Date;
 
-    @Column({
-        type: 'bigint',
-    })
-    update_time: number
+    @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP" })
+    update_time: Date;
 
     @Column({
         type: "enum",

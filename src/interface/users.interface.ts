@@ -1,7 +1,8 @@
 export interface IUsers {
     username: string,
-    age: number,
+    password: string,
     ip: string,
-    create_time: number,
-    update_time: number
+    age?: number,
+    create_time?: number,
+    update_time?: number
 }
