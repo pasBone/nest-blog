@@ -1,8 +1,14 @@
 export interface IUsers {
     username: string,
-    password: string,
+    password?: string,
     ip: string,
     age?: number,
-    create_time?: number,
-    update_time?: number
+    create_time?: Date,
+    update_time?: Date
+}
+
+export interface IUserService {
+    findAll(): Promise<IUsers[]>;
+    findOne(id: string): Promise<IUsers>;
+    create();
 }
