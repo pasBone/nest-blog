@@ -1,5 +1,5 @@
 ###query user
-GET http://192.168.17.234:8081/users/1
+GET http://192.168.17.234:8081/api/user
 
 ###create user
 POST  http://192.168.17.234:8081/users HTTP/1.1

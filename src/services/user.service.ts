@@ -28,8 +28,7 @@ export class UserServices {
         })
 
     }
-    async getUser(id: string): Promise<IUsers> {
-        const response = await this.usersRepository.findOne(id)
-        return response;
+    async getUser(id: string): Promise<Users> {
+        return await this.usersRepository.findOne(id)
     }
 }

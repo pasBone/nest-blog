@@ -1,9 +1,9 @@
 
-import { Controller, Post, Get, Req, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Response, HttpStatus, Res, Req, Body, Param } from '@nestjs/common';
 import { UserServices } from '../services/user.service';
-import { IUsers } from '../interface';
 import { Request } from 'express';
 import { getClientIp } from '../common/utils'
+import { IUsers, IResponse } from '../interface';
 
 @Controller('users')
 export class UserController {
@@ -12,19 +12,24 @@ export class UserController {
 
     @Post()
     async create(
-        @Body() userBody: IUsers,
+        @Body() body: IUsers,
         @Req() request: Request) {
 
-        let users: IUsers = {
-            username: userBody.username,
-            password: userBody.password,
+        const { username, password } = body;
+        const users: IUsers = {
+            username,
+            password,
             ip: getClientIp(request)
         }
-        return this.userServices.create(users);
+        return await this.userServices.create(users);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id): Promise<IUsers> {
-        return this.userServices.getUser(id);
+    async findOne(@Param('id') id: string): Promise<{}> {
+        return {
+            code: 200,
+            data: this.userServices.getUser(id)
+        }
+        // return this.userServices.getUser(id);
     }
 }
