@@ -1,20 +1,26 @@
 
-import { Controller, Catch, Post, Get, Req, Body, Param, BadRequestException } from '@nestjs/common';
+import { Controller, Catch, Post, Get, Req, Body, Param, BadRequestException, HttpStatus, Res, Put } from '@nestjs/common';
 import { UserServices } from '../services/user.service';
 import { IUsers } from '../interface';
 import { Request } from 'express';
 import { getClientIp } from '../common/utils';
-import { CreateUserDto } from './../dtos/user.dto'
+import { CreateUserDto, UserLoginDto } from './../dtos/user.dto'
 
 @Catch()
 @Controller('users')
 export class UserController {
 
     constructor(private readonly userServices: UserServices) { }
+    /**
+     * @description 用户注册
+     * @param dto 
+     * @param request 
+     */
     @Post()
     async create(
         @Body() dto: CreateUserDto,
-        @Req() request: Request) {
+        @Req() request: Request
+    ) {
 
         const users: IUsers = {
             username: dto.username,
@@ -38,6 +44,11 @@ export class UserController {
         throw new BadRequestException({
             error: `${dto.username}用户名已存在`
         });
+    }
+
+    @Post('login')
+    async login(@Body() dto: UserLoginDto){
+        return await this.userServices.userLogin(dto);
     }
 
     @Get(':id')

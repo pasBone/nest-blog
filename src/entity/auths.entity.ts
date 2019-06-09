@@ -10,7 +10,7 @@ export class UsersAuth {
     id: string
 
     @Column({
-        length: 32
+        length: 64
     })
     password: string
 

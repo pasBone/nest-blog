@@ -1,4 +1,4 @@
-import { ApiErrorCode } from '../common/enums/api-response-code.enum
+import { ApiResponseCode } from '../common/enums/api-response-code.enum'
 
 export interface IPagination {
     pageNumber: number, //当前页数
@@ -7,7 +7,7 @@ export interface IPagination {
 }
 
 export interface IResponse {
-    code: ApiErrorCode,     //业务状态码
+    code: ApiResponseCode,     //业务状态码
     time: number,     //请求时间
     msg: string,    //请求结果说明
     data: object | string | boolean | [], //请求结果

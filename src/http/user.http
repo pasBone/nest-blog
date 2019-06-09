@@ -6,6 +6,15 @@ POST  http://127.0.0.1:8081/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "xiongxiaojufdfdsfdsfdn2",
+    "username": "jjddg",
+    "password": "5345435"
+}
+
+###user login
+POST http://127.0.0.1:8081/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "jjddg",
     "password": "5345435"
 }

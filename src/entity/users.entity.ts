@@ -1,15 +1,5 @@
 import { Entity, Column, PrimaryColumn, Generated } from 'typeorm';
-
-export enum UserState {
-    NORMAL = "1",   //正常状态
-    ABNORMAL = "0"  //异常状态不可使用
-}
-
-export enum UserRole {
-    ADMIN = "3",
-    EDITOR = "2",
-    GHOST = "1"
-}
+import { UserState, UserRole } from './../common/enums/user.enum';
 
 @Entity()
 export class Users {

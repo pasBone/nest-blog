@@ -10,8 +10,8 @@ export class ResponseInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<IResponse> {
         return next
             .handle()
-            .pipe(map(data => {
-               
+            .pipe(map((data = {}) => {
+                console.log(data, '??');
                 return {
                     code: data.code || ApiResponseCode.SUCCESS,
                     msg: data.msg || '操作成功',
