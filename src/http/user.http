@@ -1,11 +1,11 @@
 ###query user
-GET http://192.168.17.234:8081/api/user
+GET http://127.0.0.1:8081/user/1
 
 ###create user
-POST  http://192.168.17.234:8081/users HTTP/1.1
+POST  http://127.0.0.1:8081/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "{{$guid}}",
+    "username": "xiongxiaojufdfdsfdsfdn2",
     "password": "5345435"
 }
