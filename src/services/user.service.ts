@@ -55,8 +55,7 @@ export class UserServices {
                 if (userRes.state == '0') {  // 用户已被禁用
                     return {
                         code: ApiResponseCode.USER_STATE_INVALID,
-                        msg: '账号已被禁用',
-                        data: null
+                        msg: '账号已被禁用'
                     }
                 }
 
@@ -67,26 +66,21 @@ export class UserServices {
                         id: userRes.id
                     }
                 });
-                
+
                 const userResult = await bcryptCompare(user.password, authRes.password);
-                
-                console.log(userResult);
                 if (userResult) {
                     return {
                         msg: '登录成功'
                     }
                 }
-
                 return {
                     code: ApiResponseCode.USER_ACCOUNT_INVALID,
-                    msg: '账号或密码错误',
-                    data: null
+                    msg: '账号或密码错误'
                 }
             }
             return {
                 code: ApiResponseCode.USER_ID_INVALID,
-                msg: '用户不存在',
-                data: null
+                msg: '用户不存在'
             }
 
         } catch (error) {

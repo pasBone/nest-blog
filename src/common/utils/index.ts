@@ -17,10 +17,8 @@ export function getClientIp(req) {
 export function bcryptGenSalt(pwd: string): Promise<string> {
     return new Promise(resolve => {
         const saltRounds = 10;
-        bcrypt.genSalt(saltRounds, function (err, salt) {
-            bcrypt.hash(pwd, salt, function (err, hash) {
-                resolve(hash);
-            });
+        bcrypt.hash(pwd, saltRounds, function(err, hash) {
+            resolve(hash);
         });
     })
 }
