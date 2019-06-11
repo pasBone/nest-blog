@@ -1,6 +1,7 @@
 import { IUsers } from '../interface';
-import { IsString, IsInt, IsNotEmpty, Min, MinLength, MaxLength } from 'class-validator';
+import { IsNotEmpty, MinLength, MaxLength } from 'class-validator';
 
+//  基本信息
 class UserInfo {
     @IsNotEmpty({ message: '用户名必须不能为空' })
     @MinLength(4, { message: '用户名最小长度为4位' })
@@ -13,10 +14,11 @@ class UserInfo {
     readonly password: string;
 }
 
+// 创建用户
 export class CreateUserDto extends UserInfo implements IUsers {
     constructor() { super() }
 
-    readonly ip: string;
+    ip: string;
 
     readonly age?: number;
 
@@ -25,7 +27,7 @@ export class CreateUserDto extends UserInfo implements IUsers {
     readonly update_time?: Date;
 
 }
-
+//用户登陆
 export class UserLoginDto extends UserInfo {
     constructor() { super() }
 

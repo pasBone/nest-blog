@@ -5,7 +5,6 @@ import { Repository, getRepository } from 'typeorm';
 import { bcryptGenSalt, bcryptCompare } from './../common/utils';
 import { Users } from '../entity/users.entity';
 import { UsersAuth } from '../entity/auths.entity';
-import { IUsers } from '../interface';
 import { ApiResponseCode } from './../common/enums/api-response-code.enum';
 import { CreateUserDto, UserLoginDto } from './../dtos/user.dto'
 
@@ -16,21 +15,40 @@ export class UserServices {
         @InjectRepository(Users) private readonly usersRepository: Repository<Users>,
     ) { }
 
-    async create(userInfo: IUsers) {
+    /**
+     * @description 用户注册
+     * @param userInfo 
+     */
+    async create(dto: CreateUserDto) {
         try {
-            // 保存基本信息
-            const users = new Users();
-            users.username = userInfo.username;
-            users.ip = userInfo.ip;
-            // 写入密码到 auth 表
-            const usersAuth = getRepository(UsersAuth);
-            const password = await bcryptGenSalt(userInfo.password);
 
-            await this.usersRepository.save(users);
-            return await usersAuth.save({
-                password,
-                user: users
-            });
+            const hasUser = await this.getUserByUsername(dto.username);
+
+            if (hasUser == undefined) {
+                // 保存基本信息
+                const usersEnty = new Users();
+                usersEnty.username = dto.username;
+                usersEnty.ip = dto.ip;
+
+                // 写入密码到 auth 表
+                const usersAuth = getRepository(UsersAuth);
+
+                const password = await bcryptGenSalt(dto.password);
+                await this.usersRepository.save(usersEnty);
+                await usersAuth.save({ password, user: usersEnty });
+
+                return {
+                    msg: '注册成功',
+                    data: {
+                        username: dto.username
+                    }
+                }
+            }
+
+            return {
+                code: ApiResponseCode.ERROR,
+                msg: '用户名已存在'
+            }
 
         } catch (error) {
             throw new BadRequestException({
@@ -39,18 +57,13 @@ export class UserServices {
         }
     }
 
-    async getUser(id: string): Promise<Users> {
-        return await this.usersRepository.findOne(id)
-    }
-
     /**
      * @description 用户登录
      * @param user 
      */
-    async userLogin(user: UserLoginDto) {
+    async userLogin(dto: UserLoginDto) {
         try {
-            const userRes = await this.usersRepository.findOne(user);
-            console.dir(userRes);
+            const userRes = await this.usersRepository.findOne(dto);
             if (userRes) {
                 if (userRes.state == '0') {  // 用户已被禁用
                     return {
@@ -67,7 +80,7 @@ export class UserServices {
                     }
                 });
 
-                const userResult = await bcryptCompare(user.password, authRes.password);
+                const userResult = await bcryptCompare(dto.password, authRes.password);
                 if (userResult) {
                     return {
                         msg: '登录成功'
@@ -94,9 +107,14 @@ export class UserServices {
      * @description 根据用户名查询用户信息
      * @param username 用户名
      */
-    async getUserByUsername(username: string): Promise<Users> {
+    async getUserByUsername(username: string): Promise< Users > {
         return await this.usersRepository.findOne({
             username
         });
+    }
+
+
+    async getUser(id: string): Promise<Users> {
+        return await this.usersRepository.findOne(id)
     }
 }

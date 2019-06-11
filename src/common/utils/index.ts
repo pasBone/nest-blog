@@ -23,6 +23,11 @@ export function bcryptGenSalt(pwd: string): Promise<string> {
     })
 }
 
+/**
+ * @description bcryp通过hash和原密码比对,返回比对结果
+ * @param pwd, hash 
+ * @returns promise<boolean>
+ */
 export function bcryptCompare(pwd:string, hash:string): Promise<boolean>{
     return new Promise(resolve=>{
         bcrypt.compare(pwd, hash, function(err, res) {
