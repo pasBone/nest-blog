@@ -14,3 +14,9 @@ export interface IResponse {
     path?: string,    //请求路径
     pagination?: IPagination  //分页信息
 }
+
+export interface IApiResponse {
+    code?: number,
+    data?: any,
+    msg?: string
+}

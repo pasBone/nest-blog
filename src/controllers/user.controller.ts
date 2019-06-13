@@ -1,7 +1,7 @@
 
-import { Controller,  Post, Get, Req, Body, Param, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Req, Body, Param, BadRequestException } from '@nestjs/common';
 import { UserServices } from '../services/user.service';
-import { IUsers } from '../interface';
+import { IUsers, IApiResponse } from '../interface';
 import { Request } from 'express';
 import { getClientIp } from '../common/utils';
 import { CreateUserDto, UserLoginDto } from './../dtos/user.dto'
@@ -19,19 +19,19 @@ export class UserController {
     async create(
         @Body() dto: CreateUserDto,
         @Req() request: Request
-    ) {
+    ): Promise<IApiResponse> {
 
         dto.ip = getClientIp(request)
         return await this.userServices.create(dto);
     }
 
     @Post('login')
-    async login(@Body() dto: UserLoginDto){
+    async login(@Body() dto: UserLoginDto): Promise<IApiResponse> {
         return await this.userServices.userLogin(dto);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<IUsers> {
+    async findOne(@Param('id') id: string): Promise<IApiResponse> {
         return await this.userServices.getUser(id);
     }
 }

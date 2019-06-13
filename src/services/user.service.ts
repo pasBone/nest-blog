@@ -6,7 +6,9 @@ import { bcryptGenSalt, bcryptCompare } from './../common/utils';
 import { Users } from '../entity/users.entity';
 import { UsersAuth } from '../entity/auths.entity';
 import { ApiResponseCode } from './../common/enums/api-response-code.enum';
-import { CreateUserDto, UserLoginDto } from './../dtos/user.dto'
+import { CreateUserDto, UserLoginDto } from './../dtos/user.dto';
+import { IApiResponse } from './../interface/response.interface';
+import { ApiException } from './../common/exceptions/api.exception';
 
 @Injectable()
 export class UserServices {
@@ -19,7 +21,7 @@ export class UserServices {
      * @description 用户注册
      * @param userInfo 
      */
-    async create(dto: CreateUserDto) {
+    async create(dto: CreateUserDto): Promise<IApiResponse> {
         try {
 
             const hasUser = await this.getUserByUsername(dto.username);
@@ -45,14 +47,18 @@ export class UserServices {
                 }
             }
 
-            return {
-                code: ApiResponseCode.ERROR,
-                msg: '用户名已存在'
-            }
+            // return {
+            //     code: ApiResponseCode.ERROR,
+            //     msg: '用户名已存在'
+            // }
+
+            throw new ApiException('用户名已存在', 201, 202);
 
         } catch (error) {
+            console.log(error);
             throw new BadRequestException({
-                error: `注册失败`
+                error: `注册失败，请联系管理`,
+                code: 202
             });
         }
     }
@@ -61,7 +67,7 @@ export class UserServices {
      * @description 用户登录
      * @param user 
      */
-    async userLogin(dto: UserLoginDto) {
+    async userLogin(dto: UserLoginDto): Promise<IApiResponse> {
         try {
             const userRes = await this.usersRepository.findOne(dto);
             if (userRes) {
@@ -98,7 +104,7 @@ export class UserServices {
 
         } catch (error) {
             throw new BadRequestException({
-                error: `登录失败`
+                error: `登录失败，请联系管理`
             });
         }
     }
@@ -107,14 +113,30 @@ export class UserServices {
      * @description 根据用户名查询用户信息
      * @param username 用户名
      */
-    async getUserByUsername(username: string): Promise< Users > {
+    async getUserByUsername(username: string): Promise<Users> {
         return await this.usersRepository.findOne({
             username
         });
     }
 
+    async getUser(id: string): Promise<IApiResponse> {
+        const userRes = await this.usersRepository.findOne(id);
+        
+        if (userRes) {
+            if(userRes.state == '0'){
+                return {
+                    code: ApiResponseCode.USER_STATE_INVALID,
+                    msg: '账号已被禁用'
+                }
+            }
 
-    async getUser(id: string): Promise<Users> {
-        return await this.usersRepository.findOne(id)
+            return {
+                data: userRes
+            }
+        }
+        return {
+            code: ApiResponseCode.USER_ID_INVALID,
+            msg: '用户不存在'
+        }
     }
 }

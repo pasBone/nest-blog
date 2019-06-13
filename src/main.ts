@@ -12,6 +12,7 @@ import { ApiParamsValidationPipe } from './common/pipes/api-params-validation.pi
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(new ApiParamsValidationPipe());
