@@ -1,14 +1,14 @@
 
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
-import { bcryptGenSalt, bcryptCompare } from './../common/utils';
 import { Users } from '../entity/users.entity';
 import { UsersAuth } from '../entity/auths.entity';
-import { ApiResponseCode } from './../common/enums/api-response-code.enum';
-import { CreateUserDto, UserLoginDto } from './../dtos/user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { IApiResponse } from './../interface/response.interface';
+import { CreateUserDto, UserLoginDto } from './../dtos/user.dto';
+import { bcryptGenSalt, bcryptCompare } from './../common/utils';
 import { ApiException } from './../common/exceptions/api.exception';
+import { ApiResponseCode } from './../common/enums/api-response-code.enum';
+import { Injectable, BadRequestException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class UserServices {
@@ -51,11 +51,9 @@ export class UserServices {
             //     code: ApiResponseCode.ERROR,
             //     msg: '用户名已存在'
             // }
-
-            throw new ApiException('用户名已存在', 201, 202);
+            throw new ApiException('用户名已存在', 201, HttpStatus.BAD_REQUEST);
 
         } catch (error) {
-            console.log(error);
             throw new BadRequestException({
                 error: `注册失败，请联系管理`,
                 code: 202
@@ -71,7 +69,7 @@ export class UserServices {
         try {
             const userRes = await this.usersRepository.findOne(dto);
             if (userRes) {
-                if (userRes.state == '0') {  // 用户已被禁用
+                if (userRes.state === 0) {  // 用户已被禁用
                     return {
                         code: ApiResponseCode.USER_STATE_INVALID,
                         msg: '账号已被禁用'
@@ -121,9 +119,9 @@ export class UserServices {
 
     async getUser(id: string): Promise<IApiResponse> {
         const userRes = await this.usersRepository.findOne(id);
-        
+
         if (userRes) {
-            if(userRes.state == '0'){
+            if (userRes.state === 0) {
                 return {
                     code: ApiResponseCode.USER_STATE_INVALID,
                     msg: '账号已被禁用'
